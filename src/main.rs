@@ -1,4 +1,3 @@
-use leptos::logging::log;
 use leptos::prelude::*;
 use leptos::*;
 use std::time::Duration;
