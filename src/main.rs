@@ -21,16 +21,16 @@ fn App() -> impl IntoView {
     let (pace_get, pace_set) = signal(Duration::ZERO);
     let (splits_get, splits_set) = signal(0);
     let (distance_read, distance_write) = signal(0);
+    let (show_splits, set_show_splits) = signal(true);
     let total_duration = Memo::new(move |_| {
         let pace = pace_get.get();
         let distance = distance_read.get();
         logging::log!("Pace: {:?}, splits: {}", pace, distance);
-        let seconds =
-            if pace > Duration::ZERO && distance > 0 {
-                Some((distance as f64 / 1000.0) * pace.as_secs_f64())
-            } else {
-                None
-            };
+        let seconds = if pace > Duration::ZERO && distance > 0 {
+            Some((distance as f64 / 1000.0) * pace.as_secs_f64())
+        } else {
+            None
+        };
         seconds.map(Duration::from_secs_f64)
     });
 
@@ -86,39 +86,54 @@ fn App() -> impl IntoView {
                         .unwrap_or_else(|| "N/A".to_string())
                 }}
             </p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>"Distance (m)"</th>
-                        <th>"Time (mm:ss)"</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {move || {
-                        let pace = pace_get.get();
-                        let distance = distance_read.get();
-                        let splits = splits_get.get();
-                        if pace > Duration::ZERO && distance > 0 && splits > 0 {
-                            let mut rows = Vec::new();
-                            for i in (splits..=distance as usize).step_by(splits) {
-                                let split_duration_secs = pace.as_secs_f64() * (i as f64 / 1000.0);
-                                let total_seconds = split_duration_secs as u32;
-                                let minutes = total_seconds / 60;
-                                let seconds = total_seconds % 60;
-                                rows.push(view! {
-                                    <tr>
-                                        <td>{i}</td>
-                                        <td>{format!("{:02}:{:02}", minutes, seconds)}</td>
-                                    </tr>
-                                });
-                            }
-                            rows
-                        } else {
-                            Vec::new()
-                        }
-                    }}
-                </tbody>
-            </table>
+            <button on:click=move |_| {
+                set_show_splits.set(!show_splits.get())
+            }>{move || if show_splits.get() { "Hide Splits" } else { "Show Splits" }}</button>
+            {move || {
+                if show_splits.get() {
+                    view! {
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>"Distance (m)"</th>
+                                    <th>"Time (mm:ss)"</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {move || {
+                                    let pace = pace_get.get();
+                                    let distance = distance_read.get();
+                                    let splits = splits_get.get();
+                                    if pace > Duration::ZERO && distance > 0 && splits > 0 {
+                                        let mut rows = Vec::new();
+                                        for i in (splits..=distance as usize).step_by(splits) {
+                                            let split_duration_secs = pace.as_secs_f64()
+                                                * (i as f64 / 1000.0);
+                                            let total_seconds = split_duration_secs as u32;
+                                            let minutes = total_seconds / 60;
+                                            let seconds = total_seconds % 60;
+                                            rows.push(
+                                                view! {
+                                                    <tr>
+                                                        <td>{i}</td>
+                                                        <td>{format!("{:02}:{:02}", minutes, seconds)}</td>
+                                                    </tr>
+                                                },
+                                            );
+                                        }
+                                        rows
+                                    } else {
+                                        Vec::new()
+                                    }
+                                }}
+                            </tbody>
+                        </table>
+                    }
+                        .into_any()
+                } else {
+                    view! { <></> }.into_any()
+                }
+            }}
         </div>
     }
 }
