@@ -36,7 +36,7 @@ fn App() -> impl IntoView {
 
     view! {
         <div>
-            <h1>"Lap Time Calculator"</h1>
+            <h1>"Pace Calculator"</h1>
             <label>
                 "Pace (mm:ss/km): "
                 <input
