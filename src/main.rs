@@ -38,7 +38,7 @@ fn PaceCalculatorForm(
 
     view! {
         <div class="calculator-form" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
-            <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; align-items: center; justify-content: space-between;">
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; align-items: flex-start; justify-content: space-between;">
                 <div style="display: flex; flex: 1; flex-wrap: wrap; gap: 20px; align-items: center;">
                     <div>
                         <label>
@@ -78,7 +78,7 @@ fn PaceCalculatorForm(
                         </label>
                     </div>
                 </div>
-                <div style="margin-left: auto;">
+                <div style="margin-left: auto; align-self: flex-start;">
                     {move || match on_delete.clone() {
                         Some(callback) => view! {
                             <button 
