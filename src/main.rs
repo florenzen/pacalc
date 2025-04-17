@@ -86,40 +86,49 @@ fn App() -> impl IntoView {
                         .unwrap_or_else(|| "N/A".to_string())
                 }}
             </p>
-            <button on:click=move |_| set_show_splits.set(!show_splits.get())>
-                {move || if show_splits.get() { "Hide Splits" } else { "Show Splits" }}
-            </button>
-            {move || if show_splits.get() {
-                view! {
-                    <div class="splits-container" style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px;">
-                        {move || {
-                            let pace = pace_get.get();
-                            let distance = distance_read.get();
-                            let splits = splits_get.get();
-                            if pace > Duration::ZERO && distance > 0 && splits > 0 {
-                                let mut entries = Vec::new();
-                                for i in (splits..=distance as usize).step_by(splits) {
-                                    let split_duration_secs = pace.as_secs_f64() * (i as f64 / 1000.0);
-                                    let total_seconds = split_duration_secs as u32;
-                                    let minutes = total_seconds / 60;
-                                    let seconds = total_seconds % 60;
-                                    entries.push(view! {
-                                        <div style="white-space: nowrap; display: inline-block;">
-                                            {format!("{}m: {:02}:{:02}", i, minutes, seconds)}
-                                        </div>
-                                    });
+            <button on:click=move |_| {
+                set_show_splits.set(!show_splits.get())
+            }>{move || if show_splits.get() { "Hide Splits" } else { "Show Splits" }}</button>
+            {move || {
+                if show_splits.get() {
+                    view! {
+                        <div
+                            class="splits-container"
+                            style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px;"
+                        >
+                            {move || {
+                                let pace = pace_get.get();
+                                let distance = distance_read.get();
+                                let splits = splits_get.get();
+                                if pace > Duration::ZERO && distance > 0 && splits > 0 {
+                                    let mut entries = Vec::new();
+                                    for i in (splits..=distance as usize).step_by(splits) {
+                                        let split_duration_secs = pace.as_secs_f64()
+                                            * (i as f64 / 1000.0);
+                                        let total_seconds = split_duration_secs as u32;
+                                        let minutes = total_seconds / 60;
+                                        let seconds = total_seconds % 60;
+                                        entries
+                                            .push(
+                                                view! {
+                                                    <div style="white-space: nowrap; display: inline-block;">
+                                                        {format!("{}m: {:02}:{:02}", i, minutes, seconds)}
+                                                    </div>
+                                                },
+                                            );
+                                    }
+                                    entries
+                                } else {
+                                    Vec::new()
                                 }
-                                entries
-                            } else {
-                                Vec::new()
-                            }
-                        }}
-                    </div>
-                }.into_any()
-            } else {
-                view! { <></> }.into_any()
-            }
-        }
+                            }}
+                        </div>
+                    }
+                        .into_any()
+                } else {
+                    view! { <></> }.into_any()
+                }
+            }}
         </div>
     }
 }
