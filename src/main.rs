@@ -17,10 +17,7 @@ fn parse_duration(s: &str) -> Result<Duration, String> {
 }
 
 #[component]
-fn PaceCalculatorForm(
-    id: usize,
-    on_delete: Option<Callback<usize>>,
-) -> impl IntoView {
+fn PaceCalculatorForm(id: usize, on_delete: Option<Callback<usize>>) -> impl IntoView {
     let (pace_get, pace_set) = signal(Duration::ZERO);
     let (splits_get, splits_set) = signal(0);
     let (distance_read, distance_write) = signal(0);
@@ -37,7 +34,10 @@ fn PaceCalculatorForm(
     });
 
     view! {
-        <div class="calculator-form" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+        <div
+            class="calculator-form"
+            style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;"
+        >
             <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; align-items: flex-start; justify-content: space-between;">
                 <div style="display: flex; flex: 1; flex-wrap: wrap; gap: 20px; align-items: center;">
                     <div>
@@ -80,15 +80,18 @@ fn PaceCalculatorForm(
                 </div>
                 <div style="margin-left: auto; align-self: flex-start;">
                     {move || match on_delete.clone() {
-                        Some(callback) => view! {
-                            <button 
-                                on:click=move |_| callback.run(id)
-                                class="delete-btn"
-                                style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;"
-                            >
-                                "Delete"
-                            </button>
-                        }.into_any(),
+                        Some(callback) => {
+                            view! {
+                                <button
+                                    on:click=move |_| callback.run(id)
+                                    class="delete-btn"
+                                    style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;"
+                                >
+                                    "Delete"
+                                </button>
+                            }
+                                .into_any()
+                        }
                         None => view! { <></> }.into_any(),
                     }}
                 </div>
@@ -108,40 +111,44 @@ fn PaceCalculatorForm(
                 }}
             </p>
             <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-top: 15px;">
-                <button on:click=move |_| set_show_splits.set(!show_splits.get())>
-                    {move || if show_splits.get() { "Hide Splits" } else { "Show Splits" }}
-                </button>
-                {move || if show_splits.get() {
-                    view! {
-                        {move || {
-                            let pace = pace_get.get();
-                            let distance = distance_read.get();
-                            let splits = splits_get.get();
-                            if pace > Duration::ZERO && distance > 0 && splits > 0 {
-                                let mut entries = Vec::new();
-                                for i in (splits..=distance as usize).step_by(splits) {
-                                    let split_duration_secs = pace.as_secs_f64()
-                                        * (i as f64 / 1000.0);
-                                    let total_seconds = split_duration_secs as u32;
-                                    let minutes = total_seconds / 60;
-                                    let seconds = total_seconds % 60;
+                "Splits:"
+                <button on:click=move |_| {
+                    set_show_splits.set(!show_splits.get())
+                }>{move || if show_splits.get() { "Hide Splits" } else { "Show Splits" }}</button>
+                {move || {
+                    if show_splits.get() {
+                        view! {
+                            {move || {
+                                let pace = pace_get.get();
+                                let distance = distance_read.get();
+                                let splits = splits_get.get();
+                                if pace > Duration::ZERO && distance > 0 && splits > 0 {
+                                    let mut entries = Vec::new();
+                                    for i in (splits..=distance as usize).step_by(splits) {
+                                        let split_duration_secs = pace.as_secs_f64()
+                                            * (i as f64 / 1000.0);
+                                        let total_seconds = split_duration_secs as u32;
+                                        let minutes = total_seconds / 60;
+                                        let seconds = total_seconds % 60;
+                                        entries
+                                            .push(
+                                                view! {
+                                                    <div style="white-space: nowrap; display: inline-block;">
+                                                        {format!("{}m: {:02}:{:02}", i, minutes, seconds)}
+                                                    </div>
+                                                },
+                                            );
+                                    }
                                     entries
-                                        .push(
-                                            view! {
-                                                <div style="white-space: nowrap; display: inline-block;"> 
-                                                    {format!("{}m: {:02}:{:02}", i, minutes, seconds)}
-                                                </div>
-                                            },
-                                        );
+                                } else {
+                                    Vec::new()
                                 }
-                                entries
-                            } else {
-                                Vec::new()
-                            }
-                        }}
-                    }.into_any()
-                } else {
-                    view! { <></> }.into_any()
+                            }}
+                        }
+                            .into_any()
+                    } else {
+                        view! { <></> }.into_any()
+                    }
                 }}
             </div>
         </div>
@@ -173,24 +180,24 @@ fn App() -> impl IntoView {
             <h1>"Pace Calculator"</h1>
             <div>
                 {move || {
-                    forms.get().into_iter().enumerate().map(|(index, id)| {
-                        let delete_option = if index > 0 {
-                            Some(delete_form.clone())
-                        } else {
-                            None
-                        };
-                        
-                        view! {
-                            <PaceCalculatorForm 
-                                id=id 
-                                on_delete=delete_option
-                            />
-                        }
-                    }).collect_view()
+                    forms
+                        .get()
+                        .into_iter()
+                        .enumerate()
+                        .map(|(index, id)| {
+                            let delete_option = if index > 0 {
+                                Some(delete_form.clone())
+                            } else {
+                                None
+                            };
+
+                            view! { <PaceCalculatorForm id=id on_delete=delete_option /> }
+                        })
+                        .collect_view()
                 }}
             </div>
             <div style="margin-top: 20px;">
-                <button 
+                <button
                     on:click=add_form
                     style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 18px;"
                 >
