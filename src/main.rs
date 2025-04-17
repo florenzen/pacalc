@@ -17,7 +17,11 @@ fn parse_duration(s: &str) -> Result<Duration, String> {
 }
 
 #[component]
-fn App() -> impl IntoView {
+fn PaceCalculatorForm(
+    #[prop(optional)] id: usize,
+    #[prop(optional)] can_delete: bool,
+    #[prop(optional)] on_delete: Option<Callback<(usize,), ()>>,
+) -> impl IntoView {
     let (pace_get, pace_set) = signal(Duration::ZERO);
     let (splits_get, splits_set) = signal(0);
     let (distance_read, distance_write) = signal(0);
@@ -25,7 +29,6 @@ fn App() -> impl IntoView {
     let total_duration = Memo::new(move |_| {
         let pace = pace_get.get();
         let distance = distance_read.get();
-        logging::log!("Pace: {:?}, splits: {}", pace, distance);
         let seconds = if pace > Duration::ZERO && distance > 0 {
             Some((distance as f64 / 1000.0) * pace.as_secs_f64())
         } else {
@@ -35,43 +38,64 @@ fn App() -> impl IntoView {
     });
 
     view! {
-        <div>
-            <h1>"Pace Calculator"</h1>
-            <label>
-                "Pace (mm:ss/km): "
-                <input
-                    type="text"
-                    on:input=move |ev| {
-                        let pace_str = event_target_value(&ev);
-                        match parse_duration(&pace_str) {
-                            Ok(duration) => pace_set.set(duration),
-                            Err(msg) => {
-                                logging::warn!(
-                                    "Failed to parse pace duration {}: {}", pace_str, msg
-                                )
+        <div class="calculator-form" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>"Pace Calculator"</h3>
+                {move || if can_delete {
+                    view! {
+                        <button 
+                            on:click=move |_| {
+                                if let Some(callback) = on_delete {
+                                    callback.run((id,));
+                                }
+                            }
+                            class="delete-btn"
+                            style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;"
+                        >
+                            "Delete"
+                        </button>
+                    }.into_any()
+                } else {
+                    view! { <></> }.into_any()
+                }}
+            </div>
+            <div>
+                <label>
+                    "Pace (mm:ss/km): "
+                    <input
+                        type="text"
+                        on:input=move |ev| {
+                            let pace_str = event_target_value(&ev);
+                            match parse_duration(&pace_str) {
+                                Ok(duration) => pace_set.set(duration),
+                                Err(_) => {}
                             }
                         }
-                    }
-                />
-            </label>
-            <label>
-                "Splits (m): "
-                <input
-                    type="number"
-                    on:input=move |ev| {
-                        splits_set.set(event_target_value(&ev).parse().unwrap_or(0))
-                    }
-                />
-            </label>
-            <label>
-                "Distance (m): "
-                <input
-                    type="number"
-                    on:input=move |ev| {
-                        distance_write.set(event_target_value(&ev).parse().unwrap_or(0))
-                    }
-                />
-            </label>
+                    />
+                </label>
+            </div>
+            <div>
+                <label>
+                    "Splits (m): "
+                    <input
+                        type="number"
+                        on:input=move |ev| {
+                            splits_set.set(event_target_value(&ev).parse().unwrap_or(0))
+                        }
+                    />
+                </label>
+            </div>
+            <div>
+                <label>
+                    "Distance (m): "
+                    <input
+                        type="number"
+                        on:input=move |ev| {
+                            distance_write.set(event_target_value(&ev).parse().unwrap_or(0))
+                        }
+                    />
+                </label>
+            </div>
             <p>
                 "Total duration: "
                 {move || {
@@ -122,6 +146,55 @@ fn App() -> impl IntoView {
                 } else {
                     view! { <></> }.into_any()
                 }}
+            </div>
+        </div>
+    }
+}
+
+#[component]
+fn App() -> impl IntoView {
+    let (forms, set_forms) = signal(vec![0]);
+    let (next_id, set_next_id) = signal(1);
+
+    let add_form = move |_| {
+        set_forms.update(|forms| {
+            forms.push(next_id.get());
+        });
+        set_next_id.update(|id| *id += 1);
+    };
+
+    let delete_form = Callback::from(move |id: usize| {
+        set_forms.update(|forms| {
+            if let Some(pos) = forms.iter().position(|&form_id| form_id == id) {
+                forms.remove(pos);
+            }
+        });
+    });
+
+    view! {
+        <div>
+            <h1>"Pace Calculators"</h1>
+            <div>
+                {move || {
+                    forms.get().into_iter().enumerate().map(|(index, id)| {
+                        let can_delete = index > 0;
+                        view! {
+                            <PaceCalculatorForm 
+                                id=id 
+                                can_delete=can_delete 
+                                on_delete=delete_form
+                            />
+                        }
+                    }).collect_view()
+                }}
+            </div>
+            <div style="margin-top: 20px;">
+                <button 
+                    on:click=add_form
+                    style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 18px;"
+                >
+                    "+"
+                </button>
             </div>
         </div>
     }
