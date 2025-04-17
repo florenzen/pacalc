@@ -38,7 +38,46 @@ fn PaceCalculatorForm(
 
     view! {
         <div class="calculator-form" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; align-items: center; justify-content: space-between;">
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
+                    <div>
+                        <label>
+                            "Pace (mm:ss/km): "
+                            <input
+                                type="text"
+                                on:input=move |ev| {
+                                    let pace_str = event_target_value(&ev);
+                                    match parse_duration(&pace_str) {
+                                        Ok(duration) => pace_set.set(duration),
+                                        Err(_) => {}
+                                    }
+                                }
+                            />
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            "Splits (m): "
+                            <input
+                                type="number"
+                                on:input=move |ev| {
+                                    splits_set.set(event_target_value(&ev).parse().unwrap_or(0))
+                                }
+                            />
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            "Distance (m): "
+                            <input
+                                type="number"
+                                on:input=move |ev| {
+                                    distance_write.set(event_target_value(&ev).parse().unwrap_or(0))
+                                }
+                            />
+                        </label>
+                    </div>
+                </div>
                 {move || match on_delete.clone() {
                     Some(callback) => view! {
                         <button 
@@ -51,45 +90,6 @@ fn PaceCalculatorForm(
                     }.into_any(),
                     None => view! { <></> }.into_any(),
                 }}
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px;">
-                <div>
-                    <label>
-                        "Pace (mm:ss/km): "
-                        <input
-                            type="text"
-                            on:input=move |ev| {
-                                let pace_str = event_target_value(&ev);
-                                match parse_duration(&pace_str) {
-                                    Ok(duration) => pace_set.set(duration),
-                                    Err(_) => {}
-                                }
-                            }
-                        />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        "Splits (m): "
-                        <input
-                            type="number"
-                            on:input=move |ev| {
-                                splits_set.set(event_target_value(&ev).parse().unwrap_or(0))
-                            }
-                        />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        "Distance (m): "
-                        <input
-                            type="number"
-                            on:input=move |ev| {
-                                distance_write.set(event_target_value(&ev).parse().unwrap_or(0))
-                            }
-                        />
-                    </label>
-                </div>
             </div>
             <p>
                 "Total duration: "
