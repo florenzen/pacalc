@@ -77,6 +77,20 @@ fn PaceCalculatorForm(id: usize, on_delete: Option<Callback<usize>>) -> impl Int
                             />
                         </label>
                     </div>
+                    <div>
+                        "Total duration: "
+                        {move || {
+                            total_duration
+                                .get()
+                                .map(|time| {
+                                    let total_seconds = time.as_secs();
+                                    let minutes = total_seconds / 60;
+                                    let seconds = total_seconds % 60;
+                                    format!("{:02}:{:02}", minutes, seconds)
+                                })
+                                .unwrap_or_else(|| "N/A".to_string())
+                        }}
+                    </div>
                 </div>
                 <div style="margin-left: auto; align-self: flex-start;">
                     {move || match on_delete.clone() {
@@ -96,21 +110,7 @@ fn PaceCalculatorForm(id: usize, on_delete: Option<Callback<usize>>) -> impl Int
                     }}
                 </div>
             </div>
-            <p>
-                "Total duration: "
-                {move || {
-                    total_duration
-                        .get()
-                        .map(|time| {
-                            let total_seconds = time.as_secs();
-                            let minutes = total_seconds / 60;
-                            let seconds = total_seconds % 60;
-                            format!("{:02}:{:02}", minutes, seconds)
-                        })
-                        .unwrap_or_else(|| "N/A".to_string())
-                }}
-            </p>
-            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-top: 15px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span style="display: flex; align-items: center; gap: 5px;">
                     "Splits:"
                     <button 
