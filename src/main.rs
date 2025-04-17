@@ -39,7 +39,7 @@ fn PaceCalculatorForm(
     view! {
         <div class="calculator-form" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
             <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; align-items: center; justify-content: space-between;">
-                <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
+                <div style="display: flex; flex: 1; flex-wrap: wrap; gap: 20px; align-items: center;">
                     <div>
                         <label>
                             "Pace (mm:ss/km): "
@@ -78,18 +78,20 @@ fn PaceCalculatorForm(
                         </label>
                     </div>
                 </div>
-                {move || match on_delete.clone() {
-                    Some(callback) => view! {
-                        <button 
-                            on:click=move |_| callback.run(id)
-                            class="delete-btn"
-                            style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;"
-                        >
-                            "Delete"
-                        </button>
-                    }.into_any(),
-                    None => view! { <></> }.into_any(),
-                }}
+                <div style="margin-left: auto;">
+                    {move || match on_delete.clone() {
+                        Some(callback) => view! {
+                            <button 
+                                on:click=move |_| callback.run(id)
+                                class="delete-btn"
+                                style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;"
+                            >
+                                "Delete"
+                            </button>
+                        }.into_any(),
+                        None => view! { <></> }.into_any(),
+                    }}
+                </div>
             </div>
             <p>
                 "Total duration: "
