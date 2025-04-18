@@ -265,10 +265,10 @@ fn App() -> impl IntoView {
                         .collect_view()
                 }}
             </div>
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 15px;">
                 <button
                     on:click=add_form
-                    style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 18px;"
+                    style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 18px;"
                 >
                     "+"
                 </button>
