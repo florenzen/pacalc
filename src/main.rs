@@ -161,7 +161,7 @@ fn PaceCalculatorForm(id: usize, on_delete: Option<Callback<usize>>) -> impl Int
                  style:margin-bottom=move || if error_message.get().is_empty() { "0" } else { "10px" }>
                 {move || error_message.get()}
             </div>
-            <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between;">
                 <span style="display: flex; align-items: center; gap: 5px;">
                     "Splits:"
                     <button 
