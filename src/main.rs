@@ -311,37 +311,33 @@ fn PaceCalculatorForm(
 
 #[component]
 fn App() -> impl IntoView {
-    let (forms, set_forms) = signal(vec![0]);
-    let (next_id, set_next_id) = signal(1);
+    let (forms_get, forms_set) = signal(vec![0]);
+    let (next_id_get, next_id_set) = signal(1);
 
-    // Create a global store to maintain form states
-    let (form_states, set_form_states) = signal(HashMap::<usize, FormState>::new());
+    let (form_states_get, form_states_set) = signal(HashMap::<usize, FormState>::new());
 
-    // Initialize store with default state for the first form
-    set_form_states.update(|states| {
+    form_states_set.update(|states| {
         states.insert(0, FormState::default());
     });
 
     let add_form = move |_| {
-        let new_id = next_id.get();
-        set_forms.update(|forms| {
+        let new_id = next_id_get.get();
+        forms_set.update(|forms| {
             forms.push(new_id);
         });
-        // Add default state for new form
-        set_form_states.update(|states| {
+        form_states_set.update(|states| {
             states.insert(new_id, FormState::default());
         });
-        set_next_id.update(|id| *id += 1);
+        next_id_set.update(|id| *id += 1);
     };
 
     let delete_form = Callback::new(move |id: usize| {
-        set_forms.update(|forms| {
+        forms_set.update(|forms| {
             if let Some(pos) = forms.iter().position(|&form_id| form_id == id) {
                 forms.remove(pos);
             }
         });
-        // Optional: Clean up the state for the removed form
-        set_form_states.update(|states| {
+        form_states_set.update(|states| {
             states.remove(&id);
         });
     });
@@ -357,7 +353,7 @@ fn App() -> impl IntoView {
                 <h1>"Pace Calculator"</h1>
                 <div>
                     {move || {
-                        forms
+                        forms_get
                             .get()
                             .into_iter()
                             .enumerate()
@@ -368,19 +364,16 @@ fn App() -> impl IntoView {
                                     None
                                 };
                                 let form_state = Memo::new(move |_| {
-                                    form_states
+                                    form_states_get
                                         .with(|states| states.get(&id).cloned().unwrap_or_default())
                                 });
 
-                                // Create a scoped signal provider for this form
-
-                                // Pass form states to component
                                 view! {
                                     <PaceCalculatorForm
                                         id=id
                                         on_delete=delete_option
                                         form_state=form_state
-                                        set_form_states=set_form_states.clone()
+                                        set_form_states=form_states_set.clone()
                                     />
                                 }
                             })
