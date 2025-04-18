@@ -210,8 +210,8 @@ fn PaceCalculatorForm(
             >
                 {move || error_message.get()}
             </div>
-            <div style="display: flex; align-items: flex-start;">
-                <span style="display: flex; align-items: center; gap: 5px;">
+            <div style="display: flex; align-items: baseline;">
+                <span style="display: inline-flex; align-items: center; gap: 5px;">
                     "Splits:"
                     <button
                         on:click=move |_| {
@@ -259,7 +259,7 @@ fn PaceCalculatorForm(
                         }}
                     </button>
                 </span>
-                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-left: 10px; justify-content: flex-start;">
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-left: 10px; justify-content: flex-start; align-items: baseline;">
                     {move || {
                         if show_splits.get() {
                             {
