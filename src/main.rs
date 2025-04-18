@@ -339,49 +339,56 @@ fn App() -> impl IntoView {
     });
 
     view! {
-        <div>
-            <h1>"Pace Calculator"</h1>
+        <>
+            <style>
+                "@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');"
+                
+                "body, button, input, div, span { font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, sans-serif; }"
+            </style>
             <div>
-                {move || {
-                    forms
-                        .get()
-                        .into_iter()
-                        .enumerate()
-                        .map(|(index, id)| {
-                            let delete_option = if index > 0 {
-                                Some(delete_form.clone())
-                            } else {
-                                None
-                            };
-                            let form_state = Memo::new(move |_| {
-                                form_states
-                                    .with(|states| states.get(&id).cloned().unwrap_or_default())
-                            });
+                <h1>"Pace Calculator"</h1>
+                <div>
+                    {move || {
+                        forms
+                            .get()
+                            .into_iter()
+                            .enumerate()
+                            .map(|(index, id)| {
+                                let delete_option = if index > 0 {
+                                    Some(delete_form.clone())
+                                } else {
+                                    None
+                                };
+                                let form_state = Memo::new(move |_| {
+                                    form_states
+                                        .with(|states| states.get(&id).cloned().unwrap_or_default())
+                                });
 
-                            // Create a scoped signal provider for this form
+                                // Create a scoped signal provider for this form
 
-                            // Pass form states to component
-                            view! {
-                                <PaceCalculatorForm
-                                    id=id
-                                    on_delete=delete_option
-                                    form_state=form_state
-                                    set_form_states=set_form_states.clone()
-                                />
-                            }
-                        })
-                        .collect_view()
-                }}
+                                // Pass form states to component
+                                view! {
+                                    <PaceCalculatorForm
+                                        id=id
+                                        on_delete=delete_option
+                                        form_state=form_state
+                                        set_form_states=set_form_states.clone()
+                                    />
+                                }
+                            })
+                            .collect_view()
+                    }}
+                </div>
+                <div style="margin-top: 15px;">
+                    <button
+                        on:click=add_form
+                        style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 18px;"
+                    >
+                        "+"
+                    </button>
+                </div>
             </div>
-            <div style="margin-top: 15px;">
-                <button
-                    on:click=add_form
-                    style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 18px;"
-                >
-                    "+"
-                </button>
-            </div>
-        </div>
+        </>
     }
 }
 
