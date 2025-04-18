@@ -185,9 +185,9 @@ fn PaceCalculatorForm(id: usize, on_delete: Option<Callback<usize>>) -> impl Int
                         }}
                     </button>
                 </span>
-                {move || {
-                    if show_splits.get() {
-                        view! {
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-left: 10px;">
+                    {move || {
+                        if show_splits.get() {
                             {move || {
                                 let pace = pace_get.get();
                                 let distance = distance_read.get();
@@ -213,13 +213,12 @@ fn PaceCalculatorForm(id: usize, on_delete: Option<Callback<usize>>) -> impl Int
                                 } else {
                                     Vec::new()
                                 }
-                            }}
+                            }}.into_any()
+                        } else {
+                            view! { <></> }.into_any()
                         }
-                            .into_any()
-                    } else {
-                        view! { <></> }.into_any()
-                    }
-                }}
+                    }}
+                </div>
             </div>
         </div>
     }
