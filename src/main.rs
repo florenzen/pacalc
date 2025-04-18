@@ -44,13 +44,13 @@ fn PaceCalculatorForm(
     set_form_states: WriteSignal<HashMap<usize, FormState>>,
 ) -> impl IntoView {
     let (splits_get, splits_set) = signal(form_state.get().splits);
-    let (distance_read, distance_write) = signal(form_state.get().distance);
-    let (show_splits, set_show_splits) = signal(form_state.get().show_splits);
+    let (distance_get, distance_set) = signal(form_state.get().distance);
+    let (show_splits_get, show_splits_set) = signal(form_state.get().show_splits);
     let (pace_get, pace_set) = signal(form_state.get().pace);
-    let (error_message, set_error_message) = signal(String::new());
+    let (error_message_get, error_message_set) = signal(String::new());
     let total_duration = Memo::new(move |_| {
         let pace = pace_get.get();
-        let distance = distance_read.get();
+        let distance = distance_get.get();
         let seconds = if pace > Duration::ZERO && distance > 0 {
             Some((distance as f64 / 1000.0) * pace.as_secs_f64())
         } else {
@@ -75,15 +75,15 @@ fn PaceCalculatorForm(
                                     let pace_str = event_target_value(&ev);
                                     if pace_str.trim().is_empty() {
                                         pace_set.set(Duration::ZERO);
-                                        set_error_message.set(String::new());
+                                        error_message_set.set(String::new());
                                     } else {
                                         match parse_duration(&pace_str) {
                                             Ok(duration) => {
                                                 pace_set.set(duration);
-                                                set_error_message.set(String::new());
+                                                error_message_set.set(String::new());
                                             }
                                             Err(err) => {
-                                                set_error_message.set(format!("Pace error: {}", err));
+                                                error_message_set.set(format!("Pace error: {}", err));
                                             }
                                         }
                                     }
@@ -104,20 +104,20 @@ fn PaceCalculatorForm(
                                 let input_value = event_target_value(&ev);
                                 if input_value.trim().is_empty() {
                                     splits_set.set(0);
-                                    set_error_message.set(String::new());
+                                    error_message_set.set(String::new());
                                 } else {
                                     match input_value.parse::<usize>() {
                                         Ok(value) => {
                                             if value == 0 {
-                                                set_error_message
+                                                error_message_set
                                                     .set("Splits must be greater than 0".to_string());
                                             } else {
                                                 splits_set.set(value);
-                                                set_error_message.set(String::new());
+                                                error_message_set.set(String::new());
                                             }
                                         }
                                         Err(_) => {
-                                            set_error_message
+                                            error_message_set
                                                 .set("Splits error: must be a positive number".to_string());
                                         }
                                     }
@@ -137,21 +137,21 @@ fn PaceCalculatorForm(
                             <input on:input=move |ev| {
                                 let input_value = event_target_value(&ev);
                                 if input_value.trim().is_empty() {
-                                    distance_write.set(0);
-                                    set_error_message.set(String::new());
+                                    distance_set.set(0);
+                                    error_message_set.set(String::new());
                                 } else {
                                     match input_value.parse::<usize>() {
                                         Ok(value) => {
                                             if value == 0 {
-                                                set_error_message
+                                                error_message_set
                                                     .set("Distance must be greater than 0".to_string());
                                             } else {
-                                                distance_write.set(value);
-                                                set_error_message.set(String::new());
+                                                distance_set.set(value);
+                                                error_message_set.set(String::new());
                                             }
                                         }
                                         Err(_) => {
-                                            set_error_message
+                                            error_message_set
                                                 .set(
                                                     "Distance error: must be a positive number".to_string(),
                                                 );
@@ -161,7 +161,7 @@ fn PaceCalculatorForm(
                                 set_form_states
                                     .update(|states| {
                                         if let Some(state) = states.get_mut(&id) {
-                                            state.distance = distance_read.get();
+                                            state.distance = distance_get.get();
                                         }
                                     });
                             } />
@@ -202,31 +202,31 @@ fn PaceCalculatorForm(
             </div>
             <div
                 style:color="red"
-                style:height=move || if error_message.get().is_empty() { "0" } else { "auto" }
+                style:height=move || if error_message_get.get().is_empty() { "0" } else { "auto" }
                 style:overflow="hidden"
                 style:margin-bottom=move || {
-                    if error_message.get().is_empty() { "0" } else { "10px" }
+                    if error_message_get.get().is_empty() { "0" } else { "10px" }
                 }
             >
-                {move || error_message.get()}
+                {move || error_message_get.get()}
             </div>
             <div style="display: flex; align-items: baseline;">
                 <span style="display: inline-flex; align-items: center; gap: 5px;">
                     "Splits:"
                     <button
                         on:click=move |_| {
-                            set_show_splits.set(!show_splits.get());
+                            show_splits_set.set(!show_splits_get.get());
                             set_form_states
                                 .update(|states| {
                                     if let Some(state) = states.get_mut(&id) {
-                                        state.show_splits = show_splits.get();
+                                        state.show_splits = show_splits_get.get();
                                     }
                                 });
                         }
                         style="background: transparent; border: none; padding: 5px; border-radius: 3px; cursor: pointer; color: #777;"
                     >
                         {move || {
-                            if show_splits.get() {
+                            if show_splits_get.get() {
                                 view! {
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -261,11 +261,11 @@ fn PaceCalculatorForm(
                 </span>
                 <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-left: 10px; justify-content: flex-start; align-items: baseline;">
                     {move || {
-                        if show_splits.get() {
+                        if show_splits_get.get() {
                             {
                                 move || {
                                     let pace = pace_get.get();
-                                    let distance = distance_read.get();
+                                    let distance = distance_get.get();
                                     let splits = splits_get.get();
                                     if pace > Duration::ZERO && distance > 0 && splits > 0 {
                                         let mut entries = Vec::new();
