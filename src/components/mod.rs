@@ -24,6 +24,7 @@
 mod delete_button;
 mod distance_input;
 mod error_message;
+mod label_input;
 mod pace_calculator_form;
 mod pace_input;
 mod split_toggle;
@@ -40,3 +41,4 @@ pub use split_toggle::SplitToggle;
 pub use splits_input::SplitsInput;
 pub use splits_list::SplitsList;
 pub use total_duration::TotalDuration;
+pub use label_input::LabelInput;

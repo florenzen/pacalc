@@ -77,7 +77,7 @@ fn App() -> impl IntoView {
 
                 {format!("body {{ color: {}; }}", colors::BLUE2)}
                 {format!(
-                    "input {{ border-radius: 3px; outline: none; padding: 3px; border: 0px; color: {}; border-color: {}; background-color: {}; }}",
+                    "input {{ font-size: 14px; border-radius: 3px; outline: none; padding: 3px; border: 0px; color: {}; border-color: {}; background-color: {}; }}",
                     colors::WHITE,
                     colors::GREY,
                     colors::BLUE4,

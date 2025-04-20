@@ -22,7 +22,10 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 use crate::colors;
-use crate::components::*;
+use crate::components::{
+    DeleteButton, DistanceInput, ErrorMessage, LabelInput, PaceInput, SplitToggle, SplitsInput,
+    SplitsList, TotalDuration,
+};
 use crate::form_state::FormState;
 use leptos::prelude::*;
 use std::collections::HashMap;
@@ -40,6 +43,7 @@ pub fn PaceCalculatorForm(
     let (show_splits_get, show_splits_set) = signal(form_state.get().show_splits);
     let (pace_get, pace_set) = signal(form_state.get().pace);
     let (error_message_get, error_message_set) = signal(String::new());
+    let (label_get, label_set) = signal(form_state.get().label);
     let total_duration = Memo::new(move |_| {
         let pace = pace_get.get();
         let distance = distance_get.get();
@@ -85,7 +89,13 @@ pub fn PaceCalculatorForm(
                     />
                     <TotalDuration total_duration=total_duration />
                 </div>
-                <div style="margin-left: auto; align-self: flex-start;">
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <LabelInput
+                        id=id
+                        label_get=label_get
+                        label_set=label_set
+                        set_form_states=set_form_states.clone()
+                    />
                     {move || match on_delete.clone() {
                         Some(callback) => {
                             view! { <DeleteButton id=id callback=callback /> }.into_any()

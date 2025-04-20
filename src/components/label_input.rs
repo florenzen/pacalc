@@ -21,25 +21,36 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-use std::time::Duration;
+use crate::form_state::FormState;
+use leptos::prelude::*;
+use std::collections::HashMap;
 
-#[derive(Clone, Debug, PartialEq)]
-pub struct FormState {
-    pub pace: Duration,
-    pub splits: usize,
-    pub distance: usize,
-    pub show_splits: bool,
-    pub label: String,
-}
-
-impl Default for FormState {
-    fn default() -> Self {
-        Self {
-            pace: Duration::ZERO,
-            splits: 0,
-            distance: 0,
-            show_splits: true,
-            label: String::new(),
-        }
+#[component]
+pub fn LabelInput(
+    id: usize,
+    label_get: ReadSignal<String>,
+    label_set: WriteSignal<String>,
+    set_form_states: WriteSignal<HashMap<usize, FormState>>,
+) -> impl IntoView {
+    view! {
+        <div style="margin-left: 20px;">
+            <label>
+                "Label: "
+                <input
+                    style="width:130px; font-weight: bold;"
+                    value={label_get}
+                    on:input=move |ev| {
+                        let input_value = event_target_value(&ev);
+                        label_set.set(input_value);
+                        set_form_states
+                            .update(|states| {
+                                if let Some(state) = states.get_mut(&id) {
+                                    state.label = label_get.get();
+                                }
+                            });
+                    }
+                />
+            </label>
+        </div>
     }
 }
