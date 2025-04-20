@@ -134,6 +134,10 @@ fn App() -> impl IntoView {
                         "+"
                     </button>
                 </div>
+                <div style=format!(
+                    "text-align: center; margin-top: 20px; font-size: 12px; color: {};",
+                    colors::GREY,
+                )>{"Version: "}{env!("CARGO_PKG_VERSION")}</div>
             </div>
         </>
     }
