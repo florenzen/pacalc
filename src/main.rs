@@ -3,6 +3,8 @@ use leptos::*;
 use std::collections::HashMap;
 use std::time::Duration;
 
+pub const TITLE: &str = "Pace calculator";
+
 mod colors {
     pub const BLUE1: &str = "#1568a8";
     pub const BLUE2: &str = "#2a4050";
@@ -12,6 +14,7 @@ mod colors {
     pub const GREY: &str = "#ced2d6";
     pub const WHITE: &str = "#ffffff";
 }
+
 #[derive(Clone, Debug, PartialEq)]
 struct FormState {
     pace: Duration,
@@ -443,9 +446,10 @@ fn PaceCalculatorForm(
 
 #[component]
 fn App() -> impl IntoView {
+    let _ = document().set_title(TITLE);
+
     let (forms_get, forms_set) = signal(vec![0]);
     let (next_id_get, next_id_set) = signal(1);
-
     let (form_states_get, form_states_set) = signal(HashMap::<usize, FormState>::new());
 
     form_states_set.update(|states| {
@@ -490,7 +494,7 @@ fn App() -> impl IntoView {
                 )}
             </style>
             <div>
-                <h1>"Pace Calculator"</h1>
+                <h1>{TITLE}</h1>
                 <div>
                     {move || {
                         forms_get
