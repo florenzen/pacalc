@@ -109,7 +109,7 @@ fn SplitsInput(
                             }
                             Err(_) => {
                                 error_message_set
-                                    .set("Splits error: must be a positive number".to_string());
+                                    .set("Splits must be a positive number".to_string());
                             }
                         }
                     }
@@ -156,7 +156,7 @@ fn DistanceInput(
                             Err(_) => {
                                 error_message_set
                                     .set(
-                                        "Distance error: must be a positive number".to_string(),
+                                        "Distance must be a positive number".to_string(),
                                     );
                             }
                         }
@@ -187,7 +187,7 @@ fn TotalDuration(total_duration: Memo<Option<Duration>>) -> impl IntoView {
                         let seconds = total_seconds % 60;
                         format!("{:02}:{:02}", minutes, seconds)
                     })
-                    .unwrap_or_else(|| "N/A".to_string())
+                    .unwrap_or_else(|| "—".to_string())
             }}
         </div>
     }
@@ -229,7 +229,7 @@ fn SplitToggle(
                             }
                         });
                 }
-                style="background: transparent; border: none; padding: 5px; border-radius: 3px; cursor: pointer; color: #777;"
+                style="height: 26px; background: transparent; border: none; padding: 5px; border-radius: 3px; cursor: pointer; color: #777;"
             >
                 {move || {
                     if show_splits_get.get() {
