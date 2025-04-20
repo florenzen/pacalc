@@ -2,6 +2,7 @@
 name = "pacalc"
 version = "0.1.0"
 edition = "2021"
+authors = ["Florian Lorenzen"]
 
 [dependencies]
 console_error_panic_hook = "0.1.7"
