@@ -1,4 +1,4 @@
-# Lap Time Calculator
+# Pace calculator
 
 This is a small web app built with Leptos that calculates split times given a running pace (minutes per km), the desired split length (like 400m or 800m) and a total distance.
 
