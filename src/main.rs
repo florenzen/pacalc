@@ -9,7 +9,7 @@ mod form_state;
 use components::*;
 use form_state::FormState;
 
-const TITLE: &str = "Pace Calculator";
+const TITLE: &str = "Pace calculator";
 
 #[component]
 fn App() -> impl IntoView {
@@ -61,7 +61,10 @@ fn App() -> impl IntoView {
                 )}
             </style>
             <div>
-                <h1>{TITLE}</h1>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <h1>{TITLE}</h1>
+                    <img src="images/logo.png" alt="Pace calculator Logo" style="height: 60px;" />
+                </div>
                 <div>
                     {move || {
                         forms_get
