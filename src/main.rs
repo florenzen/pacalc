@@ -3,6 +3,15 @@ use leptos::*;
 use std::collections::HashMap;
 use std::time::Duration;
 
+mod colors {
+    pub const BLUE1: &str = "#1568a8";
+    pub const BLUE2: &str = "#2a4050";
+    pub const BLUE3: &str = "#214c9a";
+    pub const BLUE4: &str = "#1999e8";
+    pub const BLUE5: &str = "#1b242c";
+    pub const GREY: &str = "#ced2d6";
+    pub const WHITE: &str = "#ffffff";
+}
 #[derive(Clone, Debug, PartialEq)]
 struct FormState {
     pace: Duration,
@@ -155,9 +164,7 @@ fn DistanceInput(
                             }
                             Err(_) => {
                                 error_message_set
-                                    .set(
-                                        "Distance must be a positive number".to_string(),
-                                    );
+                                    .set("Distance must be a positive number".to_string());
                             }
                         }
                     }
@@ -198,6 +205,9 @@ fn ErrorMessage(error_message_get: ReadSignal<String>) -> impl IntoView {
     view! {
         <div
             style:color="red"
+            style:background-color=colors::GREY
+            style:border-radius="5px"
+            style:padding=move || if error_message_get.get().is_empty() { "0" } else { "5px" }
             style:height=move || if error_message_get.get().is_empty() { "0" } else { "auto" }
             style:overflow="hidden"
             style:margin-bottom=move || {
@@ -229,7 +239,10 @@ fn SplitToggle(
                             }
                         });
                 }
-                style="height: 26px; background: transparent; border: none; padding: 5px; border-radius: 3px; cursor: pointer; color: #777;"
+                style=format!(
+                    "height: 26px; background: transparent; border: none; padding: 5px; border-radius: 3px; cursor: pointer; color: {};",
+                    colors::WHITE,
+                )
             >
                 {move || {
                     if show_splits_get.get() {
@@ -321,7 +334,10 @@ fn DeleteButton(id: usize, callback: Callback<usize>) -> impl IntoView {
     view! {
         <button
             on:click=move |_| callback.run(id)
-            style="background: transparent; border: none; padding: 5px; border-radius: 3px; cursor: pointer; color: #ff4d4d;"
+            style=format!(
+                "background: transparent; border: none; padding: 5px; border-radius: 3px; cursor: pointer; color: {};",
+                colors::WHITE,
+            )
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -330,8 +346,11 @@ fn DeleteButton(id: usize, callback: Callback<usize>) -> impl IntoView {
                 fill="currentColor"
                 viewBox="0 0 16 16"
             >
-                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                <path
+                    fill-rule="evenodd"
+                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                />
             </svg>
         </button>
     }
@@ -363,7 +382,11 @@ fn PaceCalculatorForm(
     view! {
         <div
             class="calculator-form"
-            style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;"
+            style=format!(
+                "border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; color: {}; background-color: {}",
+                colors::WHITE,
+                colors::BLUE1,
+            )
         >
             <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; align-items: flex-start; justify-content: space-between;">
                 <div style="display: flex; flex: 1; flex-wrap: wrap; gap: 20px; align-items: center;">
@@ -455,8 +478,16 @@ fn App() -> impl IntoView {
         <>
             <style>
                 "@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');"
-                
+
                 "body, button, input, div, span { font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, sans-serif; }"
+
+                {format!("body {{ color: {}; }}", colors::BLUE2)}
+                {format!(
+                    "input {{ border-radius: 3px; outline: none; padding: 3px; border: 0px; color: {}; border-color: {}; background-color: {}; }}",
+                    colors::WHITE,
+                    colors::GREY,
+                    colors::BLUE4,
+                )}
             </style>
             <div>
                 <h1>"Pace Calculator"</h1>
@@ -492,7 +523,10 @@ fn App() -> impl IntoView {
                 <div style="margin-top: 15px;">
                     <button
                         on:click=add_form
-                        style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 18px;"
+                        style=format!(
+                            "background-color:{}; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 18px;",
+                            colors::BLUE4,
+                        )
                     >
                         "+"
                     </button>
