@@ -1,5 +1,26 @@
 {
-  "devDependencies": {
+  "name": "pacalc",
+  "version": "1.0.0",
+  "description": "This is a small web app built with Leptos that calculates split times given a running pace (minutes per km), the desired split length (like 400m or 800m) and a total distance.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/florenzen/pacalc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/florenzen/pacalc/issues"
+  },
+  "homepage": "https://github.com/florenzen/pacalc#readme",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.4",
+    "install": "^0.13.0",
+    "npm": "^11.3.0",
     "tailwindcss": "^4.1.4"
   }
 }
