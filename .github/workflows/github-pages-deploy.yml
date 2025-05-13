@@ -27,6 +27,12 @@ jobs:
         with:
           targets: wasm32-unknown-unknown
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
 
@@ -35,8 +41,17 @@ jobs:
           cargo install trunk
           rustup target add wasm32-unknown-unknown
 
+      - name: Provide tailwindcss executable in PATH
+        run: |
+          mkdir -p $HOME/.local/bin
+          cat << 'EOF' > $HOME/.local/bin/tailwindcss
+          #!/bin/sh
+          npx @tailwindcss/cli $@
+          EOF
+          chmod +x $HOME/.local/bin/tailwindcss
+        
       - name: Build with trunk
-        run: trunk build --release
+        run: PATH=$PATH:$HOME/.local/bin trunk build --release
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
