@@ -85,7 +85,7 @@ fn App() -> impl IntoView {
             </style>
             <div>
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                    <h1>{TITLE}</h1>
+                    <h1 class="text-3xl">{TITLE}</h1>
                     <a href="https://www.bsv-friesen.de">
                         <img
                             src="images/logo.png"
