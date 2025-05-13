@@ -83,14 +83,14 @@ fn App() -> impl IntoView {
                     colors::BLUE4,
                 )}
             </style>
-            <div>
+            <div style="padding: 10px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                     <h1 class="text-3xl">{TITLE}</h1>
                     <a href="https://www.bsv-friesen.de">
                         <img
                             src="images/logo.png"
                             alt="Pace calculator Logo"
-                            style="height: 60px;"
+                            style="height: 70px; padding-bottom: 10px"
                         />
                     </a>
                 </div>
