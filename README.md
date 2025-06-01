@@ -9,3 +9,4 @@ To develop this project, you can use the provided devcontainer.
 1. Open the project in VS Code.
 2. Reopen the project in the container when prompted.
 3. Run the project using `trunk serve`.
+4. You can browse the app at `http://localhost:8080/pacalc`.
