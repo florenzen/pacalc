@@ -57,7 +57,6 @@ pub fn PaceCalculatorForm(
 
     view! {
         <div
-            class="calculator-form"
             style=format!(
                 "border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; color: {}; background-color: {}",
                 colors::WHITE,
