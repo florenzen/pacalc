@@ -82,6 +82,9 @@ fn App() -> impl IntoView {
                     colors::GREY,
                     colors::BLUE4,
                 )}
+
+                "/* Ensures cursor visibility on iOS */"
+                "input { -webkit-appearance: none; -moz-appearance: none; appearance: none; caret-color: #000; }"
             </style>
             <div style="padding: 10px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
