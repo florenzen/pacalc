@@ -66,13 +66,27 @@ pub fn DistanceInput(
             <div class="flex items-center">
                 <span class="whitespace-nowrap">"Distance (m):"</span>
             </div>
-            <input type="text" class="w-32 px-2 py-1 rounded" on:input=handle_input />
+            <input 
+                type="number" 
+                inputmode="numeric"
+                pattern="[0-9]*"
+                class="w-32 px-2 py-1 rounded" 
+                on:input=handle_input 
+            />
         }
         .into_any()
     } else {
         view! {
             <div>
-                <label>"Distance (m): " <input on:input=handle_input /></label>
+                <label>
+                    "Distance (m): " 
+                    <input 
+                        type="number" 
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        on:input=handle_input 
+                    />
+                </label>
             </div>
         }
         .into_any()

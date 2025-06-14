@@ -70,7 +70,9 @@ pub fn SplitsInput(
                 <span class="whitespace-nowrap">"Splits (m):"</span>
             </div>
             <input
-                type="text"
+                type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 class="w-32 px-2 py-1 rounded"
                 on:input=handle_input
             />
@@ -80,7 +82,12 @@ pub fn SplitsInput(
             <div>
                 <label>
                     "Splits (m): "
-                    <input on:input=handle_input />
+                    <input 
+                        type="number" 
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        on:input=handle_input 
+                    />
                 </label>
             </div>
         }.into_any()

@@ -77,13 +77,29 @@ pub fn PaceInput(
             <div class="flex items-center">
                 <span class="whitespace-nowrap">"Pace (mm:ss/km):"</span>
             </div>
-            <input type="text" class="w-32 px-2 py-1 rounded" on:input=handle_input />
+            <input 
+                type="text" 
+                inputmode="numeric"
+                pattern="[0-9:]+"
+                placeholder="mm:ss"
+                class="w-32 px-2 py-1 rounded" 
+                on:input=handle_input 
+            />
         }
         .into_any()
     } else {
         view! {
             <div>
-                <label>"Pace (mm:ss/km): " <input type="text" on:input=handle_input /></label>
+                <label>
+                    "Pace (mm:ss/km): " 
+                    <input 
+                        type="text" 
+                        inputmode="numeric"
+                        pattern="[0-9:]+"
+                        placeholder="mm:ss"
+                        on:input=handle_input 
+                    />
+                </label>
             </div>
         }
         .into_any()
