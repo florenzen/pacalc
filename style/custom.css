@@ -1,0 +1,7 @@
+/* Custom CSS to fix iOS cursor visibility issues */
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  caret-color: #000; /* Ensures cursor visibility on iOS */
+}
