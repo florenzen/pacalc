@@ -55,6 +55,8 @@ jobs:
 
       - name: Build with trunk
         run: PATH=$PATH:$HOME/.local/bin trunk build --release
+        env:
+          GITHUB_SHA: ${{ github.sha }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
