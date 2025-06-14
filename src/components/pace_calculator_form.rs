@@ -61,7 +61,6 @@ pub fn PaceCalculatorForm(
             style=format!("background-color: {}", colors::BLUE1)
         >
             <div class="flex flex-col md:flex-row flex-wrap gap-5 mb-4 items-start justify-between">
-                {/* Label component - only shown on small screens */}
                 <div class="w-full flex justify-end md:hidden">
                     <LabelInput
                         id=id
@@ -75,10 +74,11 @@ pub fn PaceCalculatorForm(
                         }
                         None => view! { <></> }.into_any(),
                     }}
-                </div>
-                
-                {/* Small screen layout */}
-                <div class="w-full md:hidden space-y-3">
+                </div> {}
+                <div
+                    class="w-full md:hidden grid"
+                    style="grid-template-columns: max-content 1fr; gap: 0.75rem; row-gap: 0.75rem; align-items: center;"
+                >
                     <PaceInput
                         id=id
                         pace_get=pace_get
@@ -87,7 +87,7 @@ pub fn PaceCalculatorForm(
                         set_form_states=set_form_states.clone()
                         is_grid=true
                     />
-                    
+
                     <SplitsInput
                         id=id
                         splits_get=splits_get
@@ -96,7 +96,7 @@ pub fn PaceCalculatorForm(
                         set_form_states=set_form_states.clone()
                         is_grid=true
                     />
-                    
+
                     <DistanceInput
                         id=id
                         distance_get=distance_get
@@ -105,15 +105,9 @@ pub fn PaceCalculatorForm(
                         set_form_states=set_form_states.clone()
                         is_grid=true
                     />
-                    
-                    <TotalDuration 
-                        total_duration=total_duration
-                        is_grid=true
-                    />
-                </div>
-                
-                {/* Original layout for medium and larger screens */}
-                <div class="hidden md:flex md:flex-wrap md:gap-5 md:items-center md:flex-1">
+
+                    <TotalDuration total_duration=total_duration is_grid=true />
+                </div> <div class="hidden md:flex md:flex-wrap md:gap-5 md:items-center md:flex-1">
                     <PaceInput
                         id=id
                         pace_get=pace_get
@@ -136,10 +130,7 @@ pub fn PaceCalculatorForm(
                         set_form_states=set_form_states.clone()
                     />
                     <TotalDuration total_duration=total_duration />
-                </div>
-                
-                {/* Label component - only shown on medium and larger screens */}
-                <div class="hidden md:flex md:w-auto items-center justify-end">
+                </div> <div class="hidden md:flex md:w-auto items-center justify-end">
                     <LabelInput
                         id=id
                         label_get=label_get

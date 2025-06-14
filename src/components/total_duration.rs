@@ -43,14 +43,12 @@ pub fn TotalDuration(
 
     if is_grid {
         view! {
-            <div class="w-full grid grid-cols-2 gap-x-2">
-                <div class="flex items-center">
-                    <span class="whitespace-nowrap">"Total duration:"</span>
-                </div>
-                <div>
-                    {formatted_duration}
-                </div>
+            <div class="flex items-center">
+                <span class="whitespace-nowrap">"Total duration:"</span>
             </div>
+            <span class="w-32 inline-block">
+                {formatted_duration}
+            </span>
         }.into_any()
     } else {
         view! {

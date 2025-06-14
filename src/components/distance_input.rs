@@ -43,48 +43,38 @@ pub fn DistanceInput(
             match input_value.parse::<usize>() {
                 Ok(value) => {
                     if value == 0 {
-                        error_message_set
-                            .set("Distance must be greater than 0".to_string());
+                        error_message_set.set("Distance must be greater than 0".to_string());
                     } else {
                         distance_set.set(value);
                         error_message_set.set(String::new());
                     }
                 }
                 Err(_) => {
-                    error_message_set
-                        .set("Distance must be a positive number".to_string());
+                    error_message_set.set("Distance must be a positive number".to_string());
                 }
             }
         }
-        set_form_states
-            .update(|states| {
-                if let Some(state) = states.get_mut(&id) {
-                    state.distance = distance_get.get();
-                }
-            });
+        set_form_states.update(|states| {
+            if let Some(state) = states.get_mut(&id) {
+                state.distance = distance_get.get();
+            }
+        });
     };
 
     if is_grid {
         view! {
-            <div class="w-full grid grid-cols-2 gap-x-2">
-                <div class="flex items-center">
-                    <span class="whitespace-nowrap">"Distance (m):"</span>
-                </div>
-                <input
-                    type="text"
-                    class="px-2 py-1 rounded"
-                    on:input=handle_input
-                />
+            <div class="flex items-center">
+                <span class="whitespace-nowrap">"Distance (m):"</span>
             </div>
-        }.into_any()
+            <input type="text" class="w-32 px-2 py-1 rounded" on:input=handle_input />
+        }
+        .into_any()
     } else {
         view! {
             <div>
-                <label>
-                    "Distance (m): "
-                    <input on:input=handle_input />
-                </label>
+                <label>"Distance (m): " <input on:input=handle_input /></label>
             </div>
-        }.into_any()
+        }
+        .into_any()
     }
 }

@@ -66,16 +66,14 @@ pub fn SplitsInput(
 
     if is_grid {
         view! {
-            <div class="w-full grid grid-cols-2 gap-x-2">
-                <div class="flex items-center">
-                    <span class="whitespace-nowrap">"Splits (m):"</span>
-                </div>
-                <input
-                    type="text"
-                    class="px-2 py-1 rounded"
-                    on:input=handle_input
-                />
+            <div class="flex items-center">
+                <span class="whitespace-nowrap">"Splits (m):"</span>
             </div>
+            <input
+                type="text"
+                class="w-32 px-2 py-1 rounded"
+                on:input=handle_input
+            />
         }.into_any()
     } else {
         view! {
