@@ -69,6 +69,12 @@ pub fn PaceCalculatorForm(
                         label_set=label_set
                         set_form_states=set_form_states.clone()
                     />
+                    {move || match on_delete.clone() {
+                        Some(callback) => {
+                            view! { <DeleteButton id=id callback=callback /> }.into_any()
+                        }
+                        None => view! { <></> }.into_any(),
+                    }}
                 </div>
                 
                 <div class="flex flex-wrap gap-5 items-center flex-1">
@@ -104,16 +110,6 @@ pub fn PaceCalculatorForm(
                         label_set=label_set
                         set_form_states=set_form_states.clone()
                     />
-                    {move || match on_delete.clone() {
-                        Some(callback) => {
-                            view! { <DeleteButton id=id callback=callback /> }.into_any()
-                        }
-                        None => view! { <></> }.into_any(),
-                    }}
-                </div>
-                
-                {/* Delete button - only shown on small screens */}
-                <div class="w-full flex justify-end md:hidden">
                     {move || match on_delete.clone() {
                         Some(callback) => {
                             view! { <DeleteButton id=id callback=callback /> }.into_any()
