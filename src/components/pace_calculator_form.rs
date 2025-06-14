@@ -57,14 +57,21 @@ pub fn PaceCalculatorForm(
 
     view! {
         <div
-            style=format!(
-                "border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; color: {}; background-color: {}",
-                colors::WHITE,
-                colors::BLUE1,
-            )
+            class="border border-solid border-gray-300 p-4 mb-5 rounded-md text-white"
+            style=format!("background-color: {}", colors::BLUE1)
         >
-            <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; align-items: flex-start; justify-content: space-between;">
-                <div style="display: flex; flex: 1; flex-wrap: wrap; gap: 20px; align-items: center;">
+            <div class="flex flex-col md:flex-row flex-wrap gap-5 mb-4 items-start justify-between">
+                {/* Label component - only shown on small screens */}
+                <div class="w-full flex justify-end md:hidden">
+                    <LabelInput
+                        id=id
+                        label_get=label_get
+                        label_set=label_set
+                        set_form_states=set_form_states.clone()
+                    />
+                </div>
+                
+                <div class="flex flex-wrap gap-5 items-center flex-1">
                     <PaceInput
                         id=id
                         pace_get=pace_get
@@ -88,7 +95,9 @@ pub fn PaceCalculatorForm(
                     />
                     <TotalDuration total_duration=total_duration />
                 </div>
-                <div style="display: flex; gap: 20px; align-items: center;">
+                
+                {/* Label component - only shown on medium and larger screens */}
+                <div class="hidden md:flex md:w-auto items-center justify-end">
                     <LabelInput
                         id=id
                         label_get=label_get
@@ -102,9 +111,19 @@ pub fn PaceCalculatorForm(
                         None => view! { <></> }.into_any(),
                     }}
                 </div>
+                
+                {/* Delete button - only shown on small screens */}
+                <div class="w-full flex justify-end md:hidden">
+                    {move || match on_delete.clone() {
+                        Some(callback) => {
+                            view! { <DeleteButton id=id callback=callback /> }.into_any()
+                        }
+                        None => view! { <></> }.into_any(),
+                    }}
+                </div>
             </div>
             <ErrorMessage error_message_get=error_message_get />
-            <div style="display: flex; align-items: baseline;">
+            <div class="flex items-baseline">
                 <SplitToggle
                     id=id
                     show_splits_get=show_splits_get

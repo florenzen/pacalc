@@ -33,11 +33,11 @@ pub fn LabelInput(
     set_form_states: WriteSignal<HashMap<usize, FormState>>,
 ) -> impl IntoView {
     view! {
-        <div style="margin-left: 20px;">
-            <label>
-                "Label: "
+        <div class="w-full flex justify-end">
+            <label class="flex flex-row items-center whitespace-nowrap">
+                <span class="mr-2">"Label:"</span>
                 <input
-                    style="width:130px; font-weight: bold;"
+                    class="w-32 font-bold px-2 py-1 rounded"
                     value={label_get}
                     on:input=move |ev| {
                         let input_value = event_target_value(&ev);
