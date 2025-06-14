@@ -25,21 +25,39 @@ use leptos::prelude::*;
 use std::time::Duration;
 
 #[component]
-pub fn TotalDuration(total_duration: Memo<Option<Duration>>) -> impl IntoView {
-    view! {
-        <div>
-            "Total duration: "
-            {move || {
-                total_duration
-                    .get()
-                    .map(|time| {
-                        let total_seconds = time.as_secs();
-                        let minutes = total_seconds / 60;
-                        let seconds = total_seconds % 60;
-                        format!("{:02}:{:02}", minutes, seconds)
-                    })
-                    .unwrap_or_else(|| "—".to_string())
-            }}
-        </div>
+pub fn TotalDuration(
+    total_duration: Memo<Option<Duration>>,
+    #[prop(default = false)] is_grid: bool,
+) -> impl IntoView {
+    let formatted_duration = move || {
+        total_duration
+            .get()
+            .map(|time| {
+                let total_seconds = time.as_secs();
+                let minutes = total_seconds / 60;
+                let seconds = total_seconds % 60;
+                format!("{:02}:{:02}", minutes, seconds)
+            })
+            .unwrap_or_else(|| "—".to_string())
+    };
+
+    if is_grid {
+        view! {
+            <div class="w-full grid grid-cols-2 gap-x-2">
+                <div class="flex justify-end items-center">
+                    <span class="whitespace-nowrap">"Total duration:"</span>
+                </div>
+                <div>
+                    {formatted_duration}
+                </div>
+            </div>
+        }.into_any()
+    } else {
+        view! {
+            <div>
+                "Total duration: "
+                {formatted_duration}
+            </div>
+        }.into_any()
     }
 }

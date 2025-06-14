@@ -47,38 +47,56 @@ pub fn PaceInput(
     pace_set: WriteSignal<Duration>,
     error_message_set: WriteSignal<String>,
     set_form_states: WriteSignal<HashMap<usize, FormState>>,
+    #[prop(default = false)] is_grid: bool,
 ) -> impl IntoView {
-    view! {
-        <div>
-            <label>
-                "Pace (mm:ss/km): "
+    let handle_input = move |ev| {
+        let pace_str = event_target_value(&ev);
+        if pace_str.trim().is_empty() {
+            pace_set.set(Duration::ZERO);
+            error_message_set.set(String::new());
+        } else {
+            match parse_duration(&pace_str) {
+                Ok(duration) => {
+                    pace_set.set(duration);
+                    error_message_set.set(String::new());
+                }
+                Err(err) => {
+                    error_message_set.set(format!("Pace error: {}", err));
+                }
+            }
+        }
+        set_form_states
+            .update(|states| {
+                if let Some(state) = states.get_mut(&id) {
+                    state.pace = pace_get.get();
+                }
+            });
+    };
+
+    if is_grid {
+        view! {
+            <div class="w-full grid grid-cols-2 gap-x-2">
+                <div class="flex justify-end items-center">
+                    <span class="whitespace-nowrap">"Pace (mm:ss/km):"</span>
+                </div>
                 <input
                     type="text"
-                    on:input=move |ev| {
-                        let pace_str = event_target_value(&ev);
-                        if pace_str.trim().is_empty() {
-                            pace_set.set(Duration::ZERO);
-                            error_message_set.set(String::new());
-                        } else {
-                            match parse_duration(&pace_str) {
-                                Ok(duration) => {
-                                    pace_set.set(duration);
-                                    error_message_set.set(String::new());
-                                }
-                                Err(err) => {
-                                    error_message_set.set(format!("Pace error: {}", err));
-                                }
-                            }
-                        }
-                        set_form_states
-                            .update(|states| {
-                                if let Some(state) = states.get_mut(&id) {
-                                    state.pace = pace_get.get();
-                                }
-                            });
-                    }
+                    class="w-full px-2 py-1 rounded"
+                    on:input=handle_input
                 />
-            </label>
-        </div>
+            </div>
+        }.into_any()
+    } else {
+        view! {
+            <div>
+                <label>
+                    "Pace (mm:ss/km): "
+                    <input
+                        type="text"
+                        on:input=handle_input
+                    />
+                </label>
+            </div>
+        }.into_any()
     }
 }

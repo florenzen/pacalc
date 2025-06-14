@@ -32,41 +32,59 @@ pub fn SplitsInput(
     splits_set: WriteSignal<usize>,
     error_message_set: WriteSignal<String>,
     set_form_states: WriteSignal<HashMap<usize, FormState>>,
+    #[prop(default = false)] is_grid: bool,
 ) -> impl IntoView {
-    view! {
-        <div>
-            <label>
-                "Splits (m): "
-                <input on:input=move |ev| {
-                    let input_value = event_target_value(&ev);
-                    if input_value.trim().is_empty() {
-                        splits_set.set(0);
-                        error_message_set.set(String::new());
+    let handle_input = move |ev| {
+        let input_value = event_target_value(&ev);
+        if input_value.trim().is_empty() {
+            splits_set.set(0);
+            error_message_set.set(String::new());
+        } else {
+            match input_value.parse::<usize>() {
+                Ok(value) => {
+                    if value == 0 {
+                        error_message_set
+                            .set("Splits must be greater than 0".to_string());
                     } else {
-                        match input_value.parse::<usize>() {
-                            Ok(value) => {
-                                if value == 0 {
-                                    error_message_set
-                                        .set("Splits must be greater than 0".to_string());
-                                } else {
-                                    splits_set.set(value);
-                                    error_message_set.set(String::new());
-                                }
-                            }
-                            Err(_) => {
-                                error_message_set
-                                    .set("Splits must be a positive number".to_string());
-                            }
-                        }
+                        splits_set.set(value);
+                        error_message_set.set(String::new());
                     }
-                    set_form_states
-                        .update(|states| {
-                            if let Some(state) = states.get_mut(&id) {
-                                state.splits = splits_get.get();
-                            }
-                        });
-                } />
-            </label>
-        </div>
+                }
+                Err(_) => {
+                    error_message_set
+                        .set("Splits must be a positive number".to_string());
+                }
+            }
+        }
+        set_form_states
+            .update(|states| {
+                if let Some(state) = states.get_mut(&id) {
+                    state.splits = splits_get.get();
+                }
+            });
+    };
+
+    if is_grid {
+        view! {
+            <div class="w-full grid grid-cols-2 gap-x-2">
+                <div class="flex justify-end items-center">
+                    <span class="whitespace-nowrap">"Splits (m):"</span>
+                </div>
+                <input
+                    type="text"
+                    class="w-full px-2 py-1 rounded"
+                    on:input=handle_input
+                />
+            </div>
+        }.into_any()
+    } else {
+        view! {
+            <div>
+                <label>
+                    "Splits (m): "
+                    <input on:input=handle_input />
+                </label>
+            </div>
+        }.into_any()
     }
 }

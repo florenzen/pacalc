@@ -77,7 +77,43 @@ pub fn PaceCalculatorForm(
                     }}
                 </div>
                 
-                <div class="flex flex-wrap gap-5 items-center flex-1">
+                {/* Small screen layout */}
+                <div class="w-full md:hidden space-y-3">
+                    <PaceInput
+                        id=id
+                        pace_get=pace_get
+                        pace_set=pace_set
+                        error_message_set=error_message_set
+                        set_form_states=set_form_states.clone()
+                        is_grid=true
+                    />
+                    
+                    <SplitsInput
+                        id=id
+                        splits_get=splits_get
+                        splits_set=splits_set
+                        error_message_set=error_message_set
+                        set_form_states=set_form_states.clone()
+                        is_grid=true
+                    />
+                    
+                    <DistanceInput
+                        id=id
+                        distance_get=distance_get
+                        distance_set=distance_set
+                        error_message_set=error_message_set
+                        set_form_states=set_form_states.clone()
+                        is_grid=true
+                    />
+                    
+                    <TotalDuration 
+                        total_duration=total_duration
+                        is_grid=true
+                    />
+                </div>
+                
+                {/* Original layout for medium and larger screens */}
+                <div class="hidden md:flex md:flex-wrap md:gap-5 md:items-center md:flex-1">
                     <PaceInput
                         id=id
                         pace_get=pace_get
