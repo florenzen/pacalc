@@ -79,7 +79,6 @@ pub fn PaceInput(
             </div>
             <input 
                 type="text" 
-                inputmode="numeric"
                 pattern="[0-9:]+"
                 placeholder="mm:ss"
                 class="w-32 px-2 py-1 rounded" 
@@ -94,7 +93,6 @@ pub fn PaceInput(
                     "Pace (mm:ss/km): " 
                     <input 
                         type="text" 
-                        inputmode="numeric"
                         pattern="[0-9:]+"
                         placeholder="mm:ss"
                         on:input=handle_input 
